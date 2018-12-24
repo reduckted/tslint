@@ -15,9 +15,14 @@
  * limitations under the License.
  */
 
+import * as path from "path";
 import { AbstractFormatter } from "../language/formatter/abstractFormatter";
 import { IFormatterContext, IFormatterMetadata } from "../language/formatter/formatter";
 import { RuleFailure } from "../language/rule/rule";
+
+interface FormatterOptions {
+    relativePaths?: boolean;
+}
 
 export class Formatter extends AbstractFormatter {
     /* tslint:disable:object-literal-sort-keys */
@@ -34,6 +39,7 @@ export class Formatter extends AbstractFormatter {
         if (context.failures.length === 0 && (fixes === undefined || fixes.length === 0)) {
             return "\n";
         }
+        const options = context.options as FormatterOptions;
         const sortedFailures = this.sortFailures(context.failures);
 
         const fixLines: string[] = [];
@@ -57,9 +63,9 @@ export class Formatter extends AbstractFormatter {
             const lineAndCharacter = failure.getStartPosition().getLineAndCharacter();
             const positionTuple = `${lineAndCharacter.line + 1}:${lineAndCharacter.character + 1}`;
 
-            return `${failure
-                .getRuleSeverity()
-                .toUpperCase()}: ${fileName}:${positionTuple} - ${failureString}`;
+            return `${failure.getRuleSeverity().toUpperCase()}: ${
+                options.relativePaths ? path.relative(process.cwd(), fileName) : fileName
+            }:${positionTuple} - ${failureString}`;
         });
 
         return `${fixLines.concat(errorLines).join("\n")}\n`;

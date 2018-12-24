@@ -20,8 +20,13 @@ import { IFormatterContext, IFormatterMetadata } from "../language/formatter/for
 import { RuleFailure } from "../language/rule/rule";
 
 import chalk from "chalk";
+import * as path from "path";
 
 import * as Utils from "../utils";
+
+interface FormatterOptions {
+    relativePaths?: boolean;
+}
 
 export class Formatter extends AbstractFormatter {
     /* tslint:disable:object-literal-sort-keys */
@@ -41,7 +46,7 @@ export class Formatter extends AbstractFormatter {
     public format(context: RuleFailure[] | IFormatterContext): string {
         context = this.getContext(context);
         const sorted = this.sortFailures(context.failures);
-        const outputLines = this.mapToMessages(sorted);
+        const outputLines = this.mapToMessages(sorted, context.options);
 
         // Removes initial blank line
         if (outputLines[0] === "") {
@@ -51,7 +56,7 @@ export class Formatter extends AbstractFormatter {
         return `${outputLines.join("\n")}\n`;
     }
 
-    private mapToMessages(failures: RuleFailure[]): string[] {
+    private mapToMessages(failures: RuleFailure[], options: FormatterOptions): string[] {
         if (failures.length === 0) {
             return [];
         }
@@ -69,7 +74,11 @@ export class Formatter extends AbstractFormatter {
             // Output the name of each file once
             if (currentFile !== fileName) {
                 outputLines.push("");
-                outputLines.push(`${fileName}${chalk.hidden(`:${positionTuple}`)}`);
+                outputLines.push(
+                    `${
+                        options.relativePaths ? path.relative(process.cwd(), fileName) : fileName
+                    }${chalk.hidden(`:${positionTuple}`)}`,
+                );
                 currentFile = fileName;
             }
 
