@@ -16,7 +16,7 @@
  */
 
 import { AbstractFormatter } from "../language/formatter/abstractFormatter";
-import { IFormatterMetadata } from "../language/formatter/formatter";
+import { IFormatterContext, IFormatterMetadata } from "../language/formatter/formatter";
 import { RuleFailure } from "../language/rule/rule";
 
 export class Formatter extends AbstractFormatter {
@@ -29,15 +29,17 @@ export class Formatter extends AbstractFormatter {
     };
     /* tslint:enable:object-literal-sort-keys */
 
-    public format(failures: RuleFailure[]): string {
-        if (failures.length === 0) {
+    public format(context: RuleFailure[] | IFormatterContext): string {
+        context = this.getContext(context);
+
+        if (context.failures.length === 0) {
             return "";
         }
 
         const files: string[] = [];
         let currentFile: string | undefined;
 
-        for (const failure of failures) {
+        for (const failure of context.failures) {
             const fileName = failure.getFileName();
             if (fileName !== currentFile) {
                 files.push(fileName);

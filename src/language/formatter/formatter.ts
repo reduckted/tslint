@@ -55,11 +55,30 @@ export interface FormatterConstructor {
     new (): IFormatter;
 }
 
+export interface IFormatterContext {
+    /**
+     * Linter failures that were not fixed.
+     */
+    failures: RuleFailure[];
+
+    /**
+     * Fixed linter failures. Available when the `--fix` argument is used on the command line.
+     */
+    fixes?: RuleFailure[];
+}
+
 export interface IFormatter {
     /**
      * Formats linter results
      * @param failures Linter failures that were not fixed
      * @param fixes Fixed linter failures. Available when the `--fix` argument is used on the command line
+     * @deprecated Use {@link IFormatter.(format:1)} instead.
      */
     format(failures: RuleFailure[], fixes?: RuleFailure[]): string;
+
+    /**
+     * Formats linter results
+     * @param context Contains information for formatting
+     */
+    format(context: IFormatterContext): string;
 }

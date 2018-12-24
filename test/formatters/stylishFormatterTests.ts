@@ -79,11 +79,11 @@ describe("Stylish Formatter", () => {
             1,
         ); // remove leading newline
 
-        assert.equal(formatter.format(failures), expectedResult);
+        assert.equal(formatter.format({ failures, options: {} }), expectedResult);
     });
 
     it("handles no failures", () => {
-        const result = formatter.format([]);
+        const result = formatter.format({ failures: [], options: {} });
         assert.equal(result, "\n");
     });
 });

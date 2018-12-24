@@ -18,7 +18,7 @@
 import * as path from "path";
 
 import { AbstractFormatter } from "../language/formatter/abstractFormatter";
-import { IFormatterMetadata } from "../language/formatter/formatter";
+import { IFormatterContext, IFormatterMetadata } from "../language/formatter/formatter";
 import { RuleFailure } from "../language/rule/rule";
 import { camelize } from "../utils";
 
@@ -33,8 +33,10 @@ export class Formatter extends AbstractFormatter {
     };
     /* tslint:enable:object-literal-sort-keys */
 
-    public format(failures: RuleFailure[]): string {
-        const outputLines = failures.map((failure: RuleFailure) => {
+    public format(context: RuleFailure[] | IFormatterContext): string {
+        context = this.getContext(context);
+
+        const outputLines = context.failures.map((failure: RuleFailure) => {
             const fileName = path.normalize(failure.getFileName());
             const failureString = failure.getFailure();
             const camelizedRule = camelize(failure.getRuleName());

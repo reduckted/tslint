@@ -55,7 +55,7 @@ describe("TAP Formatter", () => {
             getFailureString(3, "last-name", "error", TEST_FILE, 0, 12, "last failure"),
         ];
 
-        const actualResult = formatter.format(failures);
+        const actualResult = formatter.format({ failures, options: {} });
         assert.equal(
             actualResult,
             `TAP version 13\n1..${failures.length}\n${failureStrings.join("\n")}\n`,
@@ -63,7 +63,7 @@ describe("TAP Formatter", () => {
     });
 
     it("handles no failures", () => {
-        const result = formatter.format([]);
+        const result = formatter.format({ failures: [], options: {} });
         assert.equal(result, "TAP version 13\n1..0 # SKIP No failures\n");
     });
 

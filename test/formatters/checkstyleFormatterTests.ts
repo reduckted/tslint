@@ -94,11 +94,11 @@ describe("Checkstyle Formatter", () => {
             </file>
             </checkstyle>`.replace(/>\s+/g, ">"); // Remove whitespace between tags
 
-        assert.equal(formatter.format(failures), expectedResult);
+        assert.equal(formatter.format({ failures, options: {} }), expectedResult);
     });
 
     it("handles no failures", () => {
-        const result = formatter.format([]);
+        const result = formatter.format({ failures: [], options: {} });
         assert.deepEqual(
             result,
             '<?xml version="1.0" encoding="utf-8"?><checkstyle version="4.3"></checkstyle>',

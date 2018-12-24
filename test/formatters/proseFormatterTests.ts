@@ -54,7 +54,7 @@ describe("Prose Formatter", () => {
             ERROR: ${TEST_FILE}${getPositionString(2, 12)}mid failure
             WARNING: ${TEST_FILE}${getPositionString(9, 2)}last failure\n`.slice(1); // remove leading newline
 
-        const actualResult = formatter.format(failures);
+        const actualResult = formatter.format({ failures, options: {} });
         assert.equal(actualResult, expectedResult);
     });
 
@@ -77,12 +77,12 @@ describe("Prose Formatter", () => {
 
             ERROR: ${TEST_FILE}${getPositionString(1, 1)}first failure\n`.slice(1); // remove leading newline
 
-        const actualResult = formatter.format(failures, fixes);
+        const actualResult = formatter.format({ failures, fixes, options: {} });
         assert.equal(actualResult, expectedResult);
     });
 
     it("handles no failures", () => {
-        const result = formatter.format([]);
+        const result = formatter.format({ failures: [], options: {} });
         assert.equal(result, "\n");
     });
 

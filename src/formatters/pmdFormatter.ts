@@ -16,7 +16,7 @@
  */
 
 import { AbstractFormatter } from "../language/formatter/abstractFormatter";
-import { IFormatterMetadata } from "../language/formatter/formatter";
+import { IFormatterContext, IFormatterMetadata } from "../language/formatter/formatter";
 import { RuleFailure } from "../language/rule/rule";
 
 import * as Utils from "../utils";
@@ -37,10 +37,12 @@ export class Formatter extends AbstractFormatter {
     };
     /* tslint:enable:object-literal-sort-keys */
 
-    public format(failures: RuleFailure[]): string {
+    public format(context: RuleFailure[] | IFormatterContext): string {
+        context = this.getContext(context);
+
         let output = '<pmd version="tslint">';
 
-        for (const failure of failures) {
+        for (const failure of context.failures) {
             const failureString = failure
                 .getFailure()
                 .replace(/&/g, "&amp;")

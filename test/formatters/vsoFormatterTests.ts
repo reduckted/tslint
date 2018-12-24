@@ -53,7 +53,7 @@ describe("VSO Formatter", () => {
             getFailureString(TEST_FILE, 2, 12, "mid failure", "mid-name") +
             getFailureString(TEST_FILE, 9, 2, "last failure", "last-name");
 
-        const actualResult = formatter.format(failures);
+        const actualResult = formatter.format({ failures, options: {} });
         assert.equal(actualResult, expectedResult);
     });
 
@@ -79,14 +79,14 @@ describe("VSO Formatter", () => {
             getFailureString(TEST_FILE, 2, 12, "mid failure", "mid-name") +
             getFailureString(TEST_FILE, 9, 2, "last failure", "last-name");
 
-        const fixed = failures.slice();
+        const fixes = failures.slice();
 
-        const actualResult = formatter.format(failures, fixed);
+        const actualResult = formatter.format({ failures, fixes, options: {} });
         assert.equal(actualResult, expectedResult);
     });
 
     it("handles no failures", () => {
-        const result = formatter.format([]);
+        const result = formatter.format({ failures: [], options: {} });
         assert.equal(result, "\n");
     });
 

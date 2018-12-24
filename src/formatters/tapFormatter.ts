@@ -16,7 +16,7 @@
  */
 
 import { AbstractFormatter } from "../language/formatter/abstractFormatter";
-import { IFormatterMetadata } from "../language/formatter/formatter";
+import { IFormatterContext, IFormatterMetadata } from "../language/formatter/formatter";
 import { RuleFailure } from "../language/rule/rule";
 
 import * as Utils from "../utils";
@@ -47,13 +47,17 @@ export class Formatter extends AbstractFormatter {
     };
     /* tslint:enable:object-literal-sort-keys */
 
-    public format(failures: RuleFailure[]): string {
+    public format(context: RuleFailure[] | IFormatterContext): string {
+        context = this.getContext(context);
+
         let output: string[] = ["TAP version 13"];
 
         output =
-            failures.length === 0
+            context.failures.length === 0
                 ? output.concat(["1..0 # SKIP No failures"])
-                : output.concat([`1..${failures.length}`]).concat(this.mapToMessages(failures));
+                : output
+                      .concat([`1..${context.failures.length}`])
+                      .concat(this.mapToMessages(context.failures));
 
         return `${output.join("\n")}\n`;
     }

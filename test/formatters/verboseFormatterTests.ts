@@ -54,12 +54,12 @@ describe("Verbose Formatter", () => {
             ERROR: (mid-name) ${TEST_FILE}${getPositionString(2, 12)}mid failure
             ERROR: (last-name) ${TEST_FILE}${getPositionString(9, 2)}last failure\n`.slice(1); // remove leading newline
 
-        const actualResult = formatter.format(failures);
+        const actualResult = formatter.format({ failures, options: {} });
         assert.equal(actualResult, expectedResult);
     });
 
     it("handles no failures", () => {
-        const result = formatter.format([]);
+        const result = formatter.format({ failures: [], options: {} });
         assert.equal(result, "\n");
     });
 

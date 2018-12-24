@@ -41,12 +41,12 @@ describe("Files-list Formatter", () => {
         // we only print file-names in this formatter
         const expectedResult = `${TEST_FILE}\n`;
 
-        const actualResult = formatter.format(failures);
+        const actualResult = formatter.format({ failures, options: {} });
         assert.equal(actualResult, expectedResult);
     });
 
     it("handles no failures", () => {
-        const result = formatter.format([]);
+        const result = formatter.format({ failures: [], options: {} });
         assert.equal(result, "");
     });
 });

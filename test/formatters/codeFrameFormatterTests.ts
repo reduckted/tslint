@@ -123,13 +123,13 @@ describe("CodeFrame Formatter", () => {
         }
 
         const expectedResult = toTrimmedLines(expectedResultColored);
-        const result = toTrimmedLines(formatter.format(failures));
+        const result = toTrimmedLines(formatter.format({ failures, options: {} }));
 
         assert.deepEqual(result, expectedResult);
     });
 
     it("handles no failures", () => {
-        const result = formatter.format([]);
+        const result = formatter.format({ failures: [], options: {} });
         assert.equal(result, "\n");
     });
 });

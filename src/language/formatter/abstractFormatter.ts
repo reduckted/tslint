@@ -16,13 +16,40 @@
  */
 
 import { RuleFailure } from "../rule/rule";
-import { IFormatter, IFormatterMetadata } from "./formatter";
+import { IFormatter, IFormatterContext, IFormatterMetadata } from "./formatter";
 
 export abstract class AbstractFormatter implements IFormatter {
     public static metadata: IFormatterMetadata;
-    public abstract format(failures: RuleFailure[]): string;
+    public abstract format(context: IFormatterContext): string;
+    /**
+     * @deprecated Use {@link AbstractFormatter.(format:1)} instead.
+     */
+    public abstract format(failures: RuleFailure[], fixes?: RuleFailure[]): string;
 
     protected sortFailures(failures: RuleFailure[]): RuleFailure[] {
         return failures.slice().sort(RuleFailure.compare);
+    }
+
+    /**
+     * Converts an array of failures and fixed lint failures
+     * into a formatter context for backward-compatibility.
+     * @param contextOrFailures The context or an array of failures.
+     * @param fixes An array of fixed lint failures.
+     * @returns The formatter context.
+     */
+    protected getContext(
+        contextOrFailures: IFormatterContext | RuleFailure[],
+        fixes?: RuleFailure[],
+    ): IFormatterContext {
+        // If the first argument is an array, then it's the array of failures.
+        // If it's not an array, then it must be the context object.
+        if (Array.isArray(contextOrFailures)) {
+            return {
+                failures: contextOrFailures,
+                fixes,
+                options: {},
+            };
+        }
+        return contextOrFailures;
     }
 }

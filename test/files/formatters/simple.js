@@ -6,10 +6,10 @@ SimpleFormatter.prototype = Object.create({
     getName: function () {
         return this.name;
     },
-    format: function (failures) {
+    format: function (context) {
         var output = "";
-        for (var i = 0; i < failures.length; ++i) {
-            var failure = failures[i];
+        for (var i = 0; i < context.failures.length; ++i) {
+            var failure = context.failures[i];
             var fileName = failure.getFileName();
 
             var lineAndCharacter = failure.getStartPosition().getLineAndCharacter();

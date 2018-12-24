@@ -114,12 +114,12 @@ describe("JSON Formatter", () => {
         ];
         /* tslint:enable:object-literal-sort-keys */
 
-        const actualResult = JSON.parse(formatter.format(failures));
+        const actualResult = JSON.parse(formatter.format({ failures, options: {} }));
         assert.deepEqual(actualResult, expectedResult);
     });
 
     it("handles no failures", () => {
-        const result = JSON.parse(formatter.format([]));
+        const result = JSON.parse(formatter.format({ failures: [], options: {} }));
         assert.deepEqual(result, []);
     });
 });

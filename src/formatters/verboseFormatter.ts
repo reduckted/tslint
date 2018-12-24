@@ -16,7 +16,7 @@
  */
 
 import { AbstractFormatter } from "../language/formatter/abstractFormatter";
-import { IFormatterMetadata } from "../language/formatter/formatter";
+import { IFormatterContext, IFormatterMetadata } from "../language/formatter/formatter";
 import { RuleFailure } from "../language/rule/rule";
 
 export class Formatter extends AbstractFormatter {
@@ -31,9 +31,11 @@ export class Formatter extends AbstractFormatter {
     };
     /* tslint:enable:object-literal-sort-keys */
 
-    public format(failures: RuleFailure[]): string {
-        failures = this.sortFailures(failures);
-        return `${this.mapToMessages(failures).join("\n")}\n`;
+    public format(context: RuleFailure[] | IFormatterContext): string {
+        context = this.getContext(context);
+
+        const sorted = this.sortFailures(context.failures);
+        return `${this.mapToMessages(sorted).join("\n")}\n`;
     }
 
     private mapToMessages(failures: RuleFailure[]): string[] {

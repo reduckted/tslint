@@ -182,8 +182,11 @@ export class Linter {
             throw new Error(`formatter '${formatterName}' not found`);
         }
         const formatter = new Formatter();
-
-        const output = formatter.format(failures, this.fixes);
+        const context = {
+            failures,
+            fixes: this.fixes,
+        };
+        const output = formatter.format(context);
 
         const errorCount = errors.length;
         return {

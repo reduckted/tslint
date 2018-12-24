@@ -54,7 +54,7 @@ describe("External Formatter", () => {
             ${getPositionString(2, 11)}${TEST_FILE}
             ${getPositionString(9, 2)}${TEST_FILE}\n`.slice(1); // remove leading newline
 
-        const actualResult = formatter.format(failures);
+        const actualResult = formatter.format({ failures, options: {} });
         assert.equal(actualResult, expectedResult);
     });
 
@@ -63,7 +63,7 @@ describe("External Formatter", () => {
     });
 
     it("handles no failures", () => {
-        const result = formatter.format([]);
+        const result = formatter.format({ failures: [], options: {} });
         assert.equal(result, "");
     });
 

@@ -16,7 +16,7 @@
  */
 
 import { AbstractFormatter } from "../language/formatter/abstractFormatter";
-import { IFormatterMetadata } from "../language/formatter/formatter";
+import { IFormatterContext, IFormatterMetadata } from "../language/formatter/formatter";
 import { RuleFailure } from "../language/rule/rule";
 
 import codeFrame = require("babel-code-frame");
@@ -46,17 +46,19 @@ export class Formatter extends AbstractFormatter {
     };
     /* tslint:enable:object-literal-sort-keys */
 
-    public format(failures: RuleFailure[]): string {
-        if (typeof failures[0] === "undefined") {
+    public format(context: RuleFailure[] | IFormatterContext): string {
+        context = this.getContext(context);
+
+        if (typeof context.failures[0] === "undefined") {
             return "\n";
         }
-        failures = this.sortFailures(failures);
+        context.failures = this.sortFailures(context.failures);
 
         const outputLines: string[] = [];
 
         let currentFile: string | undefined;
 
-        for (const failure of failures) {
+        for (const failure of context.failures) {
             const fileName = failure.getFileName();
 
             // Output the name of each file once

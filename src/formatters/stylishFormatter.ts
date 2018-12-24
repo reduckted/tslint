@@ -16,7 +16,7 @@
  */
 
 import { AbstractFormatter } from "../language/formatter/abstractFormatter";
-import { IFormatterMetadata } from "../language/formatter/formatter";
+import { IFormatterContext, IFormatterMetadata } from "../language/formatter/formatter";
 import { RuleFailure } from "../language/rule/rule";
 
 import chalk from "chalk";
@@ -38,9 +38,10 @@ export class Formatter extends AbstractFormatter {
     };
     /* tslint:enable:object-literal-sort-keys */
 
-    public format(failures: RuleFailure[]): string {
-        failures = this.sortFailures(failures);
-        const outputLines = this.mapToMessages(failures);
+    public format(context: RuleFailure[] | IFormatterContext): string {
+        context = this.getContext(context);
+        const sorted = this.sortFailures(context.failures);
+        const outputLines = this.mapToMessages(sorted);
 
         // Removes initial blank line
         if (outputLines[0] === "") {

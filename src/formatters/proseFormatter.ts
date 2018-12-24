@@ -16,7 +16,7 @@
  */
 
 import { AbstractFormatter } from "../language/formatter/abstractFormatter";
-import { IFormatterMetadata } from "../language/formatter/formatter";
+import { IFormatterContext, IFormatterMetadata } from "../language/formatter/formatter";
 import { RuleFailure } from "../language/rule/rule";
 
 export class Formatter extends AbstractFormatter {
@@ -29,16 +29,17 @@ export class Formatter extends AbstractFormatter {
     };
     /* tslint:enable:object-literal-sort-keys */
 
-    public format(failures: RuleFailure[], fixes?: RuleFailure[]): string {
-        if (failures.length === 0 && (fixes === undefined || fixes.length === 0)) {
+    public format(context: RuleFailure[] | IFormatterContext, fixes?: RuleFailure[]): string {
+        context = this.getContext(context, fixes);
+        if (context.failures.length === 0 && (fixes === undefined || fixes.length === 0)) {
             return "\n";
         }
-        failures = this.sortFailures(failures);
+        const sortedFailures = this.sortFailures(context.failures);
 
         const fixLines: string[] = [];
-        if (fixes !== undefined) {
+        if (context.fixes !== undefined) {
             const perFileFixes = new Map<string, number>();
-            for (const fix of fixes) {
+            for (const fix of context.fixes) {
                 const prevFixes = perFileFixes.get(fix.getFileName());
                 perFileFixes.set(fix.getFileName(), (prevFixes !== undefined ? prevFixes : 0) + 1);
             }
@@ -49,7 +50,7 @@ export class Formatter extends AbstractFormatter {
             fixLines.push(""); // add a blank line between fixes and failures
         }
 
-        const errorLines = failures.map((failure: RuleFailure) => {
+        const errorLines = sortedFailures.map((failure: RuleFailure) => {
             const fileName = failure.getFileName();
             const failureString = failure.getFailure();
 
