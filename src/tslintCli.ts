@@ -20,6 +20,7 @@
 import commander = require("commander");
 import * as fs from "fs";
 
+import { extractCustomOptions } from "./customOptions";
 import { Linter } from "./linter";
 import { run } from "./runner";
 import { arrayify, dedent } from "./utils";
@@ -247,6 +248,7 @@ commander.on("--help", () => {
 
 // Hack to get unknown option errors to work. https://github.com/visionmedia/commander.js/pull/121
 const parsed = commander.parseOptions(process.argv.slice(2));
+const formatterOptions = extractCustomOptions("format", parsed);
 commander.args = parsed.args;
 if (parsed.unknown.length !== 0) {
     (commander.parseArgs as (args: string[], unknown: string[]) => void)([], parsed.unknown);
@@ -288,6 +290,7 @@ run(
         fix: argv.fix,
         force: argv.force,
         format: argv.format,
+        formatterOptions,
         formattersDirectory: argv.formattersDir,
         init: argv.init,
         out: argv.out,

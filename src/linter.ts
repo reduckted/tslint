@@ -185,6 +185,8 @@ export class Linter {
         const context = {
             failures,
             fixes: this.fixes,
+            options:
+                this.options.formatterOptions !== undefined ? this.options.formatterOptions : {},
         };
         const output = formatter.format(context);
 

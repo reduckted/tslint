@@ -66,6 +66,11 @@ export interface Options {
     format?: string;
 
     /**
+     * Options for the formatter.
+     */
+    formatterOptions?: {};
+
+    /**
      * Formatters directory path.
      */
     formattersDirectory?: string;
@@ -273,6 +278,7 @@ async function doLinting(
         {
             fix: !!options.fix,
             formatter,
+            formatterOptions: options.formatterOptions,
             formattersDirectory: options.formattersDirectory,
             quiet: !!options.quiet,
             rulesDirectory: options.rulesDirectory,

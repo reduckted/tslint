@@ -65,6 +65,11 @@ export interface IFormatterContext {
      * Fixed linter failures. Available when the `--fix` argument is used on the command line.
      */
     fixes?: RuleFailure[];
+
+    /**
+     * Options for the formatter.
+     */
+    options: {};
 }
 
 export interface IFormatter {
